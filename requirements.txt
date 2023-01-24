@@ -1,0 +1,5 @@
+certifi @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_477u68wvzm/croot/certifi_1671487773341/work/certifi
+PySide6==6.4.2
+PySide6-Addons==6.4.2
+PySide6-Essentials==6.4.2
+shiboken6==6.4.2
