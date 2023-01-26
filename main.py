@@ -1,13 +1,15 @@
 import sys
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication
 
-# Create app
-app = QApplication(sys.argv)
-
-# Create/display GUI window
-window = QWidget()
-window.show()
+from buttons import ButtonHolder
 
 if __name__ == "__main__":
-    # Run app
+    # Create app
+    app = QApplication(sys.argv)
+
+    # Create main window with button
+    window = ButtonHolder()
+    window.show()
+
+    # Begin event loop
     app.exec()
