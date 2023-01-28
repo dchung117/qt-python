@@ -1,4 +1,7 @@
+from typing import Callable
+
 from PySide6.QtWidgets import QMainWindow, QPushButton
+
 from slots import on_button_click
 
 class ButtonHolder(QMainWindow):
@@ -17,5 +20,5 @@ class ClickButton(QPushButton):
         self.setCheckable(True) # Set button as checkable
         self.setChecked(False) # Initially unchecked
 
-        # Set up signal to listen for button clicks
-        self.clicked.connect(on_button_click)
+    def set_click_signal(self, func: Callable) -> None:
+        self.clicked.connect(func)
