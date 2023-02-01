@@ -5,3 +5,9 @@ def on_button_click(data: bool) -> None:
 
 def on_value_change(data: int) -> None:
     print(f"Slider value changed to: {data}")
+
+def tool_bar_basic_action() -> None:
+    print("Basic action triggered.")
+
+def tool_bar_icon_action() -> None:
+    print("Icon action triggered.")
