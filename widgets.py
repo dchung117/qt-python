@@ -1,10 +1,11 @@
 import functools
-from typing import Callable, Any
+from typing import Callable, Any, Iterable
 
 from slots import on_button_click
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox
 
 from buttons import ClickButton
+
 class RockWidget(QWidget):
     def __init__(self, button_1_text: str, button_2_text: str, is_vertical: bool = False) -> None:
         super().__init__()
@@ -39,3 +40,27 @@ def click_button_decorator(func: Callable, button_name: str) -> Callable:
         out = func(data)
         return out
     return wrapper
+
+class MessageWidget(QWidget):
+    def __init__(self, title: str, msg_boxes: Iterable[QMessageBox]) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # Set up layout
+        button_layout = QVBoxLayout()
+
+        # set up message buttons
+        self.msg_boxes = msg_boxes
+        for i, msg_box in enumerate(msg_boxes):
+            msg_button = QPushButton(msg_box.msg_type.capitalize())
+            msg_button.clicked.connect(self.button_clicked(i))
+
+            button_layout.addWidget(msg_button)
+        self.setLayout(button_layout)
+
+    def button_clicked(self, idx: int) -> Callable:
+        @functools.wraps(self.msg_boxes[idx])
+        def wrapper(*args, **kwargs) -> Any:
+            self.msg_boxes[idx].listen()
+            return
+        return wrapper
