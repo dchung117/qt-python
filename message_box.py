@@ -6,7 +6,6 @@ ICON_MAP = {
     "question": QMessageBox.Question,
     "information": QMessageBox.Information,
     "warning": QMessageBox.Warning,
-    # "about": QMessageBox.About
 }
 
 class MessageBox(QMessageBox):
@@ -36,3 +35,15 @@ class MessageBox(QMessageBox):
 class CriticalMessageBox(MessageBox):
     def __init__(self, min_size: tuple[int, int], title: str, text: str, verbose_text: str) -> None:
         super().__init__(min_size, title, text, verbose_text, "critical")
+
+class QuestionMessageBox(MessageBox):
+    def __init__(self, min_size: tuple[int, int], title: str, text: str, verbose_text: str) -> None:
+        super().__init__(min_size, title, text, verbose_text, "question")
+
+class InformationMessageBox(MessageBox):
+    def __init__(self, min_size: tuple[int, int], title: str, text: str, verbose_text: str) -> None:
+        super().__init__(min_size, title, text, verbose_text, "information")
+
+class WarningMessageBox(MessageBox):
+    def __init__(self, min_size: tuple[int, int], title: str, text: str, verbose_text: str) -> None:
+        super().__init__(min_size, title, text, verbose_text, "warning")
