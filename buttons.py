@@ -22,3 +22,9 @@ class ClickButton(QPushButton):
 
     def set_click_signal(self, func: Callable) -> None:
         self.clicked.connect(func)
+
+    def set_pressed_signal(self, func: Callable) -> None:
+        self.pressed.connect(func)
+
+    def set_released_signal(self, func: Callable) -> None:
+        self.released.connect(func)

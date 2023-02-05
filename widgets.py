@@ -1,7 +1,7 @@
 import functools
 from typing import Callable, Any, Iterable
 
-from slots import on_button_click
+from slots import on_button_click, on_button_press, on_button_release
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox
 
 from buttons import ClickButton
@@ -17,11 +17,18 @@ class RockWidget(QWidget):
 
         # Set up decorators
         click_button_1_partial = functools.partial(click_button_decorator, button_name=button_1_text)
+        press_release_button_1_partial = functools.partial(press_release_button_decorator, button_name=button_1_text)
         click_button_2_partial = functools.partial(click_button_decorator, button_name=button_2_text)
+        press_release_button_2_partial = functools.partial(press_release_button_decorator, button_name=button_2_text)
 
-        # Set up signals to listen for button clicks
+
+        # Set up signals to listen for button clicks, presses, releases
         button_1.set_click_signal(click_button_1_partial(on_button_click))
+        button_1.set_pressed_signal(press_release_button_1_partial(on_button_press))
+        button_1.set_released_signal(press_release_button_1_partial(on_button_release))
         button_2.set_click_signal(click_button_2_partial(on_button_click))
+        button_2.set_pressed_signal(press_release_button_2_partial(on_button_press))
+        button_2.set_released_signal(press_release_button_2_partial(on_button_release))
 
         # Set up button widget layout
         if is_vertical:
@@ -35,9 +42,17 @@ class RockWidget(QWidget):
 
 def click_button_decorator(func: Callable, button_name: str) -> Callable:
     @functools.wraps(func)
-    def wrapper(data: Any) -> Any:
+    def wrapper(data: bool) -> Any:
         print(f"Button name: {button_name}.")
         out = func(data)
+        return out
+    return wrapper
+
+def press_release_button_decorator(func: Callable, button_name: str) -> Callable:
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs) -> Any:
+        print(f"Button name: {button_name}.")
+        out = func(*args, **kwargs)
         return out
     return wrapper
 
