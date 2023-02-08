@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 
 def on_button_click(data) -> None:
     print(f"You clicked the button! Data: {data}")
@@ -17,3 +17,9 @@ def tool_bar_basic_action() -> None:
 
 def tool_bar_icon_action() -> None:
     print("Icon action triggered.")
+
+def get_line_edit_text(text: str, label_title: Optional[str] = None) -> None:
+    if label_title:
+        print(f"{label_title}: {text}")
+    else:
+        print(text)

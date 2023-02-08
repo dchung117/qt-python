@@ -8,6 +8,7 @@ import menus
 import toolbar
 import windows
 import message_box
+import labels
 
 from slots import tool_bar_basic_action, tool_bar_icon_action
 
@@ -15,8 +16,9 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create rock widget
-    widget = widgets.RockWidget("Button 1", "Button 2")
+    # Create label line-edit widget
+    line_edit_label = labels.LineEditQLabel("Line Edit")
+    widget = widgets.LineEditLabelWidget("Line Edit Widget", line_edit_label)
 
     widget.show()
 

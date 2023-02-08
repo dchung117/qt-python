@@ -1,10 +1,11 @@
 import functools
 from typing import Callable, Any, Iterable
 
-from slots import on_button_click, on_button_press, on_button_release
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox
+from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel
 
 from buttons import ClickButton
+from labels import LineEditQLabel
 
 class RockWidget(QWidget):
     def __init__(self, button_1_text: str, button_2_text: str, is_vertical: bool = False) -> None:
@@ -77,5 +78,35 @@ class MessageWidget(QWidget):
         @functools.wraps(self.msg_boxes[idx])
         def wrapper(*args, **kwargs) -> Any:
             self.msg_boxes[idx].listen()
+            return
+        return wrapper
+
+class LineEditLabelWidget(QWidget):
+    def __init__(self, title: str, edit_label: LineEditQLabel) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+        self.label = edit_label
+
+        # Button to collect data
+        button = QPushButton("Get data")
+        self.text_holder_label = QLabel("I am here")
+        button.clicked.connect(self.line_edit_decorator(get_line_edit_text, self.label))
+
+        # Layout
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(edit_label)
+        h_layout.addWidget(edit_label.line_edit)
+
+        v_layout = QVBoxLayout()
+        v_layout.addLayout(h_layout) # h_layout w/ qlabel/line edit will be nested in a larger vertical layout
+        v_layout.addWidget(button)
+        v_layout.addWidget(self.text_holder_label)
+
+        self.setLayout(v_layout)
+
+    def line_edit_decorator(self, func: Callable, edit_label: LineEditQLabel) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            func(edit_label.line_edit.text(), edit_label.title)
             return
         return wrapper
