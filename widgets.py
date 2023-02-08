@@ -90,7 +90,7 @@ class LineEditLabelWidget(QWidget):
         # Button to collect data
         button = QPushButton("Get data")
         self.text_holder_label = QLabel("I am here")
-        button.clicked.connect(self.line_edit_decorator(get_line_edit_text, self.label))
+        button.clicked.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label))
 
         # Layout
         h_layout = QHBoxLayout()
@@ -104,9 +104,9 @@ class LineEditLabelWidget(QWidget):
 
         self.setLayout(v_layout)
 
-    def line_edit_decorator(self, func: Callable, edit_label: LineEditQLabel) -> Callable:
+    def line_edit_decorator(self, func: Callable, edit_label: LineEditQLabel, line_edit_holder: QLabel) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs) -> Any:
-            func(edit_label.line_edit.text(), edit_label.title)
+            func(edit_label.line_edit.text(), line_edit_holder, edit_label.title)
             return
         return wrapper
