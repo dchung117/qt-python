@@ -1,7 +1,7 @@
 import functools
 from typing import Callable, Any, Iterable
 
-from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text
+from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel
 
 from buttons import ClickButton
@@ -90,7 +90,12 @@ class LineEditLabelWidget(QWidget):
         # Button to collect data
         button = QPushButton("Get data")
         self.text_holder_label = QLabel("I am here")
-        button.clicked.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label))
+        # button.clicked.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label)) # print text in line edit
+        # self.label.line_edit.textChanged.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label, prefix="Text changed")) # show text edit in label
+        # self.label.line_edit.cursorPositionChanged.connect(line_edit_cursor_changed) # track line edit cursor
+        # self.label.line_edit.editingFinished.connect(line_edit_finished) # listen for enter key presses
+        # self.label.line_edit.selectionChanged.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label, prefix="Selection changed")) # show highlighted text
+        self.label.line_edit.textEdited.connect(self.line_edit_decorator(get_line_edit_text, self.label, self.text_holder_label, prefix="Text edited to")) # track edits in real time
 
         # Layout
         h_layout = QHBoxLayout()
@@ -104,9 +109,14 @@ class LineEditLabelWidget(QWidget):
 
         self.setLayout(v_layout)
 
-    def line_edit_decorator(self, func: Callable, edit_label: LineEditQLabel, line_edit_holder: QLabel) -> Callable:
+    def line_edit_decorator(self, func: Callable, edit_label: LineEditQLabel, line_edit_holder: QLabel, prefix: str = "") -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs) -> Any:
-            func(edit_label.line_edit.text(), line_edit_holder, edit_label.title)
+            # Get text or selected text
+            text = edit_label.line_edit.text()
+            if "Select" in prefix:
+                text = edit_label.line_edit.selectedText()
+
+            func(text, line_edit_holder, edit_label.title, prefix=prefix)
             return
         return wrapper

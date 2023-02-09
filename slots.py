@@ -19,11 +19,20 @@ def tool_bar_basic_action() -> None:
 def tool_bar_icon_action() -> None:
     print("Icon action triggered.")
 
-def get_line_edit_text(text: str, line_edit_holder: QLabel, label_title: Optional[str] = None, ) -> None:
+def get_line_edit_text(text: str, line_edit_holder: QLabel, label_title: Optional[str] = None, prefix: str = "") -> None:
     if label_title:
-        print(f"{label_title}: {text}")
+        print(f"{label_title} - {prefix}: {text}")
     else:
-        print(text)
+        print(f"{prefix}: {text}")
 
     # Set label text
     line_edit_holder.setText(text)
+
+def line_edit_cursor_changed(old_pos: int, new_pos: int) -> None:
+    print(f"Cursor moved: {old_pos} -> {new_pos}.")
+
+def line_edit_finished() -> None:
+    print(f"You pressed 'Enter' - editing finished.")
+
+def line_edit_track(new_text: str) -> None:
+    print(f"Text edited to: {new_text}")
