@@ -2,7 +2,7 @@ import functools
 from typing import Callable, Any, Iterable
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit
 
 from buttons import ClickButton
 from labels import LineEditQLabel
@@ -120,3 +120,70 @@ class LineEditLabelWidget(QWidget):
             func(text, line_edit_holder, edit_label.title, prefix=prefix)
             return
         return wrapper
+
+class TextEditWidget(QWidget):
+    def __init__(self, title: str, default_text: str, default_html: str):
+        super().__init__()
+        self.setWindowTitle(title)
+
+        self.text_edit = QTextEdit()
+        self.text_edit.setPlainText(default_text)
+        self.default_text = default_text
+        self.default_html = default_html
+
+        # print current text
+        get_text_button = QPushButton("Get text")
+        get_text_button.clicked.connect(self.print_text)
+
+        # Set up buttons for copy, cut, paste, undo, redo, set plain text, etc.
+        copy = QPushButton("Copy")
+        copy.clicked.connect(self.text_edit.copy)
+
+        cut = QPushButton("Cut")
+        cut.clicked.connect(self.text_edit.cut)
+
+        paste = QPushButton("Paste")
+        paste.clicked.connect(self.text_edit.paste)
+
+        undo = QPushButton("Undo")
+        undo.clicked.connect(self.text_edit.undo)
+
+        redo = QPushButton("Redo")
+        redo.clicked.connect(self.text_edit.redo)
+
+        set_plain_text = QPushButton("Set Plain Text")
+        set_plain_text.clicked.connect(self.set_plain_text)
+
+        set_html = QPushButton("Set HTML")
+        set_html.clicked.connect(self.set_html)
+
+        clear = QPushButton("Clear")
+        clear.clicked.connect(self.text_edit.clear)
+
+        # Button layout
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(get_text_button)
+        button_layout.addWidget(copy)
+        button_layout.addWidget(cut)
+        button_layout.addWidget(paste)
+        button_layout.addWidget(undo)
+        button_layout.addWidget(redo)
+        button_layout.addWidget(set_plain_text)
+        button_layout.addWidget(set_html)
+        button_layout.addWidget(clear)
+
+        # Widget layout
+        layout = QVBoxLayout()
+        layout.addLayout(button_layout)
+        layout.addWidget(self.text_edit)
+
+        self.setLayout(layout)
+
+    def print_text(self) -> None:
+        print(f"Entered text: {self.text_edit.toPlainText()}")
+
+    def set_plain_text(self) -> None:
+        self.text_edit.setPlainText(self.default_text)
+
+    def set_html(self) -> None:
+        self.text_edit.setHtml(self.default_html)

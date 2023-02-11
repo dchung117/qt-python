@@ -16,9 +16,10 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create label line-edit widget
-    line_edit_label = labels.LineEditQLabel("Line Edit")
-    widget = widgets.LineEditLabelWidget("Line Edit Widget", line_edit_label)
+    # Create text edit widget
+    default_text = "Type Here!"
+    default_html = "<h1>Kigali Districts</h1><p>The city of Kigali has three districts : </br> <ul> <li>Gasabo</li> <li>Nyarugenge</li><li>Kicukiro</li></ul></p>"
+    widget = widgets.TextEditWidget("Q Text Editor", default_text, default_html)
 
     widget.show()
 
