@@ -5,7 +5,7 @@ from slots import on_button_click, on_button_press, on_button_release, get_line_
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit
 
 from buttons import ClickButton
-from labels import LineEditQLabel
+from labels import LineEditQLabel, ImageLabel
 
 class RockWidget(QWidget):
     def __init__(self, button_1_text: str, button_2_text: str, is_vertical: bool = False) -> None:
@@ -187,3 +187,14 @@ class TextEditWidget(QWidget):
 
     def set_html(self) -> None:
         self.text_edit.setHtml(self.default_html)
+
+class ImageWidget(QWidget):
+    def __init__(self, title: str, img_file: str) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        self.img_label = ImageLabel(img_file)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.img_label)
+        self.setLayout(layout)

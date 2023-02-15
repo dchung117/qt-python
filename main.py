@@ -1,4 +1,6 @@
 import sys
+import os
+from dotenv import load_dotenv
 from PySide6.QtWidgets import QApplication
 
 import buttons
@@ -13,13 +15,14 @@ import labels
 from slots import tool_bar_basic_action, tool_bar_icon_action
 
 if __name__ == "__main__":
+    # Load environmental variables
+    load_dotenv()
+
     # Create app
     app = QApplication(sys.argv)
 
     # Create text edit widget
-    default_text = "Type Here!"
-    default_html = "<h1>Kigali Districts</h1><p>The city of Kigali has three districts : </br> <ul> <li>Gasabo</li> <li>Nyarugenge</li><li>Kicukiro</li></ul></p>"
-    widget = widgets.TextEditWidget("Q Text Editor", default_text, default_html)
+    widget = widgets.ImageWidget("My Image", os.environ["IMG_PATH"])
 
     widget.show()
 
