@@ -1,5 +1,5 @@
 import functools
-from typing import Callable, Any, Iterable
+from typing import Callable, Any, Iterable, Optional
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit
@@ -197,4 +197,32 @@ class ImageWidget(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.img_label)
+        self.setLayout(layout)
+
+class SizeStretchWidget(QWidget):
+    def __init__(self, title: str, label_title: str, button_titles: Iterable[str], button_stretches: Optional[Iterable[int]] = None, size_policy: tuple[Optional[str]] = (None, None)) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # line edit widget
+        line_edit_layout = QHBoxLayout()
+        self.line_edit_label = LineEditQLabel(label_title, horizontal_size_policy=size_policy[0], vertical_size_policy=size_policy[1])
+        line_edit_layout.addWidget(self.line_edit_label)
+        line_edit_layout.addWidget(self.line_edit_label.line_edit)
+
+        # buttons
+        button_layout = QHBoxLayout()
+        button_iter = zip(button_titles, [None]*len(button_titles))
+        if button_stretches:
+            button_iter = zip(button_titles, button_stretches)
+        for bt, stretch in button_iter:
+            if stretch:
+                button_layout.addWidget(QPushButton(bt), stretch)
+            else:
+                button_layout.addWidget(QPushButton(bt))
+
+        # overall layout
+        layout = QVBoxLayout()
+        layout.addLayout(line_edit_layout)
+        layout.addLayout(button_layout)
         self.setLayout(layout)

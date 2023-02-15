@@ -21,8 +21,8 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create text edit widget
-    widget = widgets.ImageWidget("My Image", os.environ["IMG_PATH"])
+    # Create size policy/stretch widget
+    widget = widgets.SizeStretchWidget("Size policy and stretch demo", "Line editor", button_titles=["One", "Two", "Three"], button_stretches=[2, 1, 1], size_policy=("expand", "fixed"))
 
     widget.show()
 
