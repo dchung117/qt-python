@@ -21,8 +21,12 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create size policy/stretch widget
-    widget = widgets.SizeStretchWidget("Size policy and stretch demo", "Line editor", button_titles=["One", "Two", "Three"], button_stretches=[2, 1, 1], size_policy=("expand", "fixed"))
+    # Create grid layout widget
+    buttons = [buttons.ClickButton(s) for s in ("One", "Two", "Three", "Four", "Five", "Six", "Seven")]
+    button_pos = [(0, 0), (0, 1), (1, 0), (1, 1), (1, 2), (2, 1), (2, 2)]
+    button_spans = [None, (1, 2), (2, 1), None, None, None, None]
+    size_policies = [None, ("expand", "fixed"), ("expand", "expand"), None, None, None, None]
+    widget = widgets.GridWidget("QGrid Demo", buttons, button_pos, button_spans=button_spans, size_policies=size_policies)
 
     widget.show()
 

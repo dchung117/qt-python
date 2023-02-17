@@ -2,10 +2,10 @@ import functools
 from typing import Callable, Any, Iterable, Optional
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout
 
 from buttons import ClickButton
-from labels import LineEditQLabel, ImageLabel
+from labels import LineEditQLabel, ImageLabel, SIZE_POLICIES
 
 class RockWidget(QWidget):
     def __init__(self, button_1_text: str, button_2_text: str, is_vertical: bool = False) -> None:
@@ -200,7 +200,8 @@ class ImageWidget(QWidget):
         self.setLayout(layout)
 
 class SizeStretchWidget(QWidget):
-    def __init__(self, title: str, label_title: str, button_titles: Iterable[str], button_stretches: Optional[Iterable[int]] = None, size_policy: tuple[Optional[str]] = (None, None)) -> None:
+    def __init__(self, title: str, label_title: str, button_titles: Iterable[str],
+        button_stretches: Optional[Iterable[int]] = None, size_policy: tuple[Optional[str]] = (None, None)) -> None:
         super().__init__()
         self.setWindowTitle(title)
 
@@ -226,3 +227,29 @@ class SizeStretchWidget(QWidget):
         layout.addLayout(line_edit_layout)
         layout.addLayout(button_layout)
         self.setLayout(layout)
+
+class GridWidget(QWidget):
+    def __init__(self, title: str, buttons: Iterable[QPushButton], button_positions: Iterable[tuple[int]],
+        button_spans: Iterable[tuple[int]] | None = None, size_policies: Iterable[tuple[str]] | None = None) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # Apply size policies
+        if size_policies:
+            for i, sz_p in enumerate(size_policies):
+                if sz_p:
+                    buttons[i].setSizePolicy(SIZE_POLICIES[sz_p[0]], SIZE_POLICIES[sz_p[1]])
+
+        # Create grid layout
+        grid_layout = QGridLayout()
+        for i, (b, b_pos) in enumerate(zip(buttons, button_positions)):
+            # Specify span if included
+            if button_spans:
+                if button_spans[i]:
+                    grid_layout.addWidget(b, *b_pos, *button_spans[i])
+                else:
+                    grid_layout.addWidget(b, *b_pos)
+            else:
+                grid_layout.addWidget(b, *b_pos)
+        self.setLayout(grid_layout)
+
