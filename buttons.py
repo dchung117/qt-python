@@ -1,6 +1,6 @@
-from typing import Callable
+from typing import Callable, Iterable
 
-from PySide6.QtWidgets import QMainWindow, QPushButton
+from PySide6.QtWidgets import QMainWindow, QPushButton, QGroupBox, QCheckBox, QRadioButton, QButtonGroup, QVBoxLayout
 
 from slots import on_button_click
 
@@ -28,3 +28,53 @@ class ClickButton(QPushButton):
 
     def set_released_signal(self, func: Callable) -> None:
         self.released.connect(func)
+
+class CheckBox(QCheckBox):
+    def __init__(self, title: str) -> None:
+        super().__init__(title)
+        self.toggled.connect(self.create_toggle_func(title))
+
+    def create_toggle_func(self, title: str) -> Callable:
+        def func(is_checked: bool) -> None:
+            if is_checked:
+                print(f"{title} selected.")
+            else:
+                print(f"{title} unselected.")
+        return func
+
+class RadioButton(QRadioButton):
+    def __init__(self, title: str) -> None:
+        super().__init__(title)
+        self.toggled.connect(self.create_toggle_func(title))
+
+    def create_toggle_func(self, title: str) -> Callable:
+        def func(is_checked: bool) -> None:
+            if is_checked:
+                print(f"{title} selected.")
+            else:
+                print(f"{title} unselected.")
+        return func
+
+class CheckGroupBox(QGroupBox):
+    def __init__(self, title: str, check_boxes: Iterable[QCheckBox | QRadioButton]) -> None:
+        super().__init__(title)
+
+        # Set up checkboxes
+        layout = QVBoxLayout()
+        for cb in check_boxes:
+            layout.addWidget(cb)
+        self.setLayout(layout)
+
+class ExclusiveCheckBoxes(QGroupBox):
+    def __init__(self, title: str, check_boxes: Iterable[QCheckBox]) -> None:
+        super().__init__(title)
+
+        # Create exclusive button group, layout
+        button_group = QButtonGroup(self)
+        layout = QVBoxLayout()
+        for cb in check_boxes:
+            button_group.addButton(cb)
+            layout.addWidget(cb)
+        button_group.setExclusive(True)
+
+        self.setLayout(layout)

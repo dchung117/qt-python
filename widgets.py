@@ -2,7 +2,7 @@ import functools
 from typing import Callable, Any, Iterable, Optional
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout, QGroupBox
 
 from buttons import ClickButton
 from labels import LineEditQLabel, ImageLabel, SIZE_POLICIES
@@ -253,3 +253,22 @@ class GridWidget(QWidget):
                 grid_layout.addWidget(b, *b_pos)
         self.setLayout(grid_layout)
 
+class CheckBoxWidget(QWidget):
+    def __init__(self, title: str, check_boxes: QGroupBox, exclusive_check_boxes: QGroupBox, radio_buttons: QGroupBox) -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # Add check group boxes to layout
+        check_boxes_layout = QHBoxLayout()
+        check_boxes_layout.addWidget(exclusive_check_boxes)
+        check_boxes_layout.addWidget(check_boxes)
+
+        # Add radio buttons to layout
+        radio_button_layout = QVBoxLayout()
+        radio_button_layout.addWidget(radio_buttons)
+
+        # Create overall layout
+        layout = QVBoxLayout()
+        layout.addLayout(check_boxes_layout)
+        layout.addLayout(radio_button_layout)
+        self.setLayout(layout)
