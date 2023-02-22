@@ -21,15 +21,8 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create check box/radio box widget
-    check_boxes = [buttons.CheckBox(t) for t in ["Fries", "Onion rings", "Mac and cheese"]]
-    exclusive_check_boxes = [buttons.CheckBox(t) for t in ["Burger", "Hot dog", "Chicken tenders"]]
-    radio_buttons = [buttons.RadioButton(t) for t in ["Apple pie", "Fruit cup", "Milkshake"]]
-
-    check_group_box = buttons.CheckGroupBox("Choose your sides: ", check_boxes)
-    exclusive_check_group_box = buttons.ExclusiveCheckBoxes("Choose your entree: ", exclusive_check_boxes)
-    radio_button_group_box = buttons.CheckGroupBox("Choose a dessert: ", radio_buttons)
-    widget = widgets.CheckBoxWidget("Fast food", check_group_box, exclusive_check_group_box, radio_button_group_box)
+    # Create to-do list widget
+    widget = widgets.ListWidget("To-do list", items=["clean room", "take out trash", "cook dinner"])
 
     widget.show()
 

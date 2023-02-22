@@ -14,11 +14,12 @@ class ButtonHolder(QMainWindow):
         self.setCentralWidget(self.button)
 
 class ClickButton(QPushButton):
-    def __init__(self, text: str) -> None:
+    def __init__(self, text: str, is_checkable: bool = False) -> None:
         super().__init__(text)
 
-        self.setCheckable(True) # Set button as checkable
-        self.setChecked(False) # Initially unchecked
+        if is_checkable:
+            self.setCheckable(True) # Set button as checkable
+            self.setChecked(False) # Initially unchecked
 
     def set_click_signal(self, func: Callable) -> None:
         self.clicked.connect(func)

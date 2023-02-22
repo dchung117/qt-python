@@ -1,8 +1,9 @@
 import functools
-from typing import Callable, Any, Iterable, Optional
+from typing import Callable, Any, Iterable, Optional, Literal, Union
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout, QGroupBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout, QGroupBox, \
+    QListWidget, QListWidgetItem, QAbstractItemView
 
 from buttons import ClickButton
 from labels import LineEditQLabel, ImageLabel, SIZE_POLICIES
@@ -272,3 +273,92 @@ class CheckBoxWidget(QWidget):
         layout.addLayout(check_boxes_layout)
         layout.addLayout(radio_button_layout)
         self.setLayout(layout)
+
+class ListWidget(QWidget):
+    LIST_SELECTION_MODES = {
+        "single": QAbstractItemView.SingleSelection,
+        "contiguous": QAbstractItemView.ContiguousSelection,
+        "extended": QAbstractItemView.ExtendedSelection,
+        "multi": QAbstractItemView.MultiSelection,
+        "none": QAbstractItemView.NoSelection
+    }
+    def __init__(self, title: str, items: Union[str, Iterable[str]] = [],
+        selection_mode: Literal["single", "contiguous", "extended", "multi", "none"] = "multi") -> None:
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # set up list widget
+        self.list_widget = QListWidget()
+        mode = ListWidget.LIST_SELECTION_MODES.get(selection_mode)
+        if mode is None:
+            raise KeyError(f"Selection mode must be one of 'single', 'contiguous', 'extended', 'multi', 'none'")
+        self.list_widget.setSelectionMode(mode)
+
+        if isinstance(items, str):
+            self.list_widget.addItem(items)
+        else:
+            self.list_widget.addItems(items)
+
+        # set up slots
+        self.list_widget.currentItemChanged.connect(self.item_select_changed)
+        self.list_widget.currentTextChanged.connect(self.item_text_changed)
+
+        # line edit
+        self.line_edit_label = LineEditQLabel("Type new item here: ")
+
+        # buttons
+        add_button = ClickButton("Add item")
+        add_button.set_click_signal(self.add_item)
+
+        delete_button = ClickButton("Delete item")
+        delete_button.set_click_signal(self.delete_item)
+
+        count_button = ClickButton("Count items")
+        count_button.set_click_signal(self.count_items)
+
+        select_button = ClickButton("Selected items")
+        select_button.set_click_signal(self.selected_items)
+
+        # layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.list_widget)
+        layout.addWidget(self.line_edit_label)
+        layout.addWidget(self.line_edit_label.line_edit)
+        layout.addWidget(add_button)
+        layout.addWidget(delete_button)
+        layout.addWidget(count_button)
+        layout.addWidget(select_button)
+
+        self.setLayout(layout)
+
+    def item_select_changed(self, curr_item: QListWidgetItem, prev_item: QListWidgetItem) -> None:
+        if prev_item:
+            print(f"Previous item selected: {prev_item.text()}")
+        else:
+            print("Previous item: None")
+
+        if curr_item:
+            print(f"Current item: {curr_item.text()}")
+        else:
+            print("Current item: None")
+
+    def item_text_changed(self, curr_text: str) -> None:
+        print(f"Current text: {curr_text}")
+
+    def add_item(self) -> None:
+        if len(self.line_edit_label.line_edit.text()):
+            self.list_widget.addItem(self.line_edit_label.line_edit.text())
+
+    def delete_item(self) -> None:
+        self.list_widget.takeItem(self.list_widget.currentRow())
+
+    def count_items(self) -> None:
+        print(f"Number of items: {self.list_widget.count()}")
+        print()
+
+    def selected_items(self) -> None:
+        print("Selected items: ")
+        for item in self.list_widget.selectedItems():
+            if item:
+                print(item.text())
+        print()
