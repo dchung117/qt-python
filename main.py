@@ -21,10 +21,12 @@ if __name__ == "__main__":
     # Create app
     app = QApplication(sys.argv)
 
-    # Create to-do list widget
-    widget = widgets.ListWidget("To-do list", items=["clean room", "take out trash", "cook dinner"])
+    # Create tab widget
+    rock_widget = widgets.RockWidget("Button 1", "Button 2")
+    list_widget = widgets.ListWidget("To-do list", "clean my room")
+    tab_widget = widgets.TabWidget("Tab widget", widgets=[rock_widget, list_widget], widget_names=["Rock widget", "To-do list"])
 
-    widget.show()
+    tab_widget.show()
 
     # Begin event loop
     app.exec()

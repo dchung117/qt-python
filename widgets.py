@@ -3,7 +3,7 @@ from typing import Callable, Any, Iterable, Optional, Literal, Union
 
 from slots import on_button_click, on_button_press, on_button_release, get_line_edit_text, line_edit_cursor_changed, line_edit_finished, line_edit_track
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMessageBox, QLabel, QTextEdit, QGridLayout, QGroupBox, \
-    QListWidget, QListWidgetItem, QAbstractItemView
+    QListWidget, QListWidgetItem, QAbstractItemView, QTabWidget
 
 from buttons import ClickButton
 from labels import LineEditQLabel, ImageLabel, SIZE_POLICIES
@@ -362,3 +362,21 @@ class ListWidget(QWidget):
             if item:
                 print(item.text())
         print()
+
+class TabWidget(QWidget):
+    def __init__(self, title: str, widgets: Iterable[QWidget], widget_names: Iterable[str]) -> None:
+        # assert that widget and names are provided
+        assert len(widgets) == len(widget_names), "Must provide name for every widget."
+
+        super().__init__()
+        self.setWindowTitle(title)
+
+        # tab widget
+        tab_widget = QTabWidget(self)
+        for w, w_name in zip(widgets, widget_names):
+            tab_widget.addTab(w, w_name)
+
+        # tab widget layout
+        layout = QVBoxLayout()
+        layout.addWidget(tab_widget)
+        self.setLayout(layout)
