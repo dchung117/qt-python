@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QM
 
 from buttons import ClickButton
 from labels import LineEditQLabel, ImageLabel, SIZE_POLICIES
+from menus import ComboBox
 
 class RockWidget(QWidget):
     def __init__(self, button_1_text: str, button_2_text: str, is_vertical: bool = False) -> None:
@@ -380,3 +381,54 @@ class TabWidget(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(tab_widget)
         self.setLayout(layout)
+
+class ComboBoxWidget(QWidget):
+    def __init__(self, title: str, choices: Iterable[str]):
+        super().__init__()
+        self.setWindowTitle(title)
+
+        self.combo_box = ComboBox(choices)
+        self.line_edit_label = LineEditQLabel(f"Enter index: (1-{self.combo_box.count()})")
+
+        # Get/set/get all buttons
+        get_value_button = ClickButton("Get current value")
+        get_value_button.set_click_signal(self.get_current_value)
+        set_value_button = ClickButton("Set current value")
+        set_value_button.set_click_signal(self.set_current_value)
+        get_all_value_button = ClickButton("Get all values")
+        get_all_value_button.set_click_signal(self.get_all_values)
+
+        # Layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.combo_box)
+        layout.addWidget(self.line_edit_label)
+        layout.addWidget(self.line_edit_label.line_edit)
+        layout.addWidget(get_value_button)
+        layout.addWidget(set_value_button)
+        layout.addWidget(get_all_value_button)
+        self.setLayout(layout)
+
+    def get_current_value(self) -> None:
+        print(f"Current selected item: {self.combo_box.currentText()}")
+        print(f"Current selected index: {self.combo_box.currentIndex()+1}")
+        print()
+
+    def set_current_value(self):
+        # Get line edit text
+        text = self.line_edit_label.line_edit.text()
+        if text.isdigit():
+            text = int(text)
+            if 1 <= text <= self.combo_box.count():
+                self.combo_box.setCurrentIndex(text-1)
+                print(f"New selected item: {self.combo_box.itemText(text-1)}")
+            else:
+                print(f"Index {text} is out of bounds.")
+        else:
+            print("f{text} is not an integer.")
+        print()
+
+    def get_all_values(self):
+        print(f"All values: ")
+        for i in range(self.combo_box.count()):
+            print((f"Index: {i+1}, Item: {self.combo_box.itemText(i)}"))
+        print()

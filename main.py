@@ -22,11 +22,10 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Create tab widget
-    rock_widget = widgets.RockWidget("Button 1", "Button 2")
-    list_widget = widgets.ListWidget("To-do list", "clean my room")
-    tab_widget = widgets.TabWidget("Tab widget", widgets=[rock_widget, list_widget], widget_names=["Rock widget", "To-do list"])
+    choices = ["Valentine's Day", "Halloween", "Thanksgiving", "Christmas"]
+    combo_box_widget = widgets.ComboBoxWidget("Holidays", choices=choices)
 
-    tab_widget.show()
+    combo_box_widget.show()
 
     # Begin event loop
     app.exec()

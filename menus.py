@@ -1,5 +1,5 @@
-from typing import Union
-from PySide6.QtWidgets import QMenuBar, QMenu
+from typing import Union, Iterable
+from PySide6.QtWidgets import QMenuBar, QMenu, QComboBox
 
 class MenuBar(QMenuBar):
     def __init__(self, menus: Union[list[tuple[str, list[str]]], list[QMenu]]) -> None:
@@ -18,3 +18,10 @@ class Menu(QMenu):
         self.setTitle("&" + title)
         for a in actions:
             self.addAction(a)
+
+class ComboBox(QComboBox):
+    def __init__(self, choices: Iterable[str]) -> None:
+        super().__init__()
+        # Add choices to combo box
+        for c in choices:
+            self.addItem(c)
